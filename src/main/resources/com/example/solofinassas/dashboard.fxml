@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane fitToWidth="true" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.solofinassas.controller.DashboardController">
+    <VBox spacing="20" style="-fx-padding: 25; -fx-background-color: #ffffff;">
+
+        <Label text="Solo Finanças" style="-fx-font-family: 'Segoe UI'; -fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #37352f;"/>
+
+        <HBox spacing="20">
+            <VBox spacing="10" HBox.hgrow="ALWAYS">
+                <HBox spacing="15">
+                    <VBox styleClass="card" HBox.hgrow="ALWAYS" style="-fx-background-color: #f7f7f5; -fx-padding: 15; -fx-background-radius: 6;">
+                        <Label text="TOTAL RECEITAS" style="-fx-font-size: 11px; -fx-text-fill: #6b6a65; -fx-font-weight: bold;"/>
+                        <Label fx:id="lblTotalReceita" text="R$ 0,00" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2ecc71;"/>
+                    </VBox>
+                    <VBox styleClass="card" HBox.hgrow="ALWAYS" style="-fx-background-color: #f7f7f5; -fx-padding: 15; -fx-background-radius: 6;">
+                        <Label text="TOTAL DESPESAS" style="-fx-font-size: 11px; -fx-text-fill: #6b6a65; -fx-font-weight: bold;"/>
+                        <Label fx:id="lblTotalDespesa" text="R$ 0,00" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #e74c3c;"/>
+                    </VBox>
+                </HBox>
+
+                <VBox spacing="10" style="-fx-background-color: #f7f7f5; -fx-padding: 15; -fx-background-radius: 6;">
+                    <Label text="Nova Movimentação" style="-fx-font-size: 11px; -fx-font-weight: bold;"/>
+                    <HBox spacing="10">
+                        <TextField fx:id="txtDescricao" promptText="Descrição"/>
+                        <TextField fx:id="txtValor" promptText="Valor (R$)"/>
+                        <ComboBox fx:id="cbTipo" promptText="Tipo"/>
+                        <TextField fx:id="txtTag" promptText="Tag/Categoria"/>
+                        <Button text="Adicionar" onAction="#handleAdicionarMovimentacao" style="-fx-background-color: #2383e2; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+
+            <VBox style="-fx-background-color: #f7f7f5; -fx-background-radius: 6; -fx-padding: 5;" alignment="CENTER">
+                <PieChart fx:id="financeChart" prefWidth="250" prefHeight="180" labelsVisible="false"/>
+            </VBox>
+        </HBox>
+
+        <GridPane hgap="20">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+
+            <VBox spacing="10" GridPane.columnIndex="0">
+                <Label text="Histórico de Entradas" style="-fx-font-weight: bold;"/>
+                <TableView fx:id="tabelaReceitas" prefHeight="250">
+                    <columns>
+                        <TableColumn fx:id="colRecDesc" text="Descrição" prefWidth="180"/>
+                        <TableColumn fx:id="colRecValor" text="Valor" prefWidth="100"/>
+                        <TableColumn fx:id="colRecTag" text="Tag" prefWidth="100"/>
+                    </columns>
+                </TableView>
+            </VBox>
+
+            <VBox spacing="10" GridPane.columnIndex="1">
+                <Label text="Histórico de Saídas" style="-fx-font-weight: bold;"/>
+                <TableView fx:id="tabelaDespesas" prefHeight="250">
+                    <columns>
+                        <TableColumn fx:id="colDesDesc" text="Item / Serviço" prefWidth="180"/>
+                        <TableColumn fx:id="colDesValor" text="Valor" prefWidth="100"/>
+                        <TableColumn fx:id="colDesTag" text="Tag" prefWidth="100"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </GridPane>
+    </VBox>
+</ScrollPane>
