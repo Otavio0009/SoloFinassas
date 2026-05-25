@@ -10,18 +10,20 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-
+import javafx.scene.layout.VBox;
 import java.time.LocalDate;
 
 public class DashboardController {
 
+    @FXML private VBox rootContainer;
+    @FXML private Label lblTotalPoupanca;
     @FXML private Label lblTotalReceita;
     @FXML private Label lblTotalDespesa;
     @FXML private PieChart financeChart;
 
-    @FXML private TextField txtDescricao;
-    @FXML private TextField txtValor;
-    @FXML private ComboBox<String> cbTipo;
+    @FXML private TextField txtDescription;
+    @FXML private TextField txtAmount;
+    @FXML private ComboBox<String> cbType;
     @FXML private TextField txtTag;
 
     @FXML private TableView<Receita> tabelaReceitas;
@@ -39,9 +41,14 @@ public class DashboardController {
 
     @FXML
     public void initialize() {
-        // Agora o cbTipo está protegido dentro do método correto!
-        if (cbTipo != null) {
-            cbTipo.setItems(FXCollections.observableArrayList("Entrada", "Saída"));
+        if (rootContainer != null && !rootContainer.getStyleClass().contains("light-theme") && !rootContainer.getStyleClass().contains("dark-theme")) {
+            rootContainer.getStyleClass().add("light-theme");
+        }
+
+        if (cbType != null) {
+            // Coloca "Selecione..." como a opção padrão da lista para garantir que ela apareça sempre
+            cbType.setItems(FXCollections.observableArrayList("Selecione...", "Receita", "Despesa"));
+            cbType.getSelectionModel().select(0);
         }
         configurarColunas();
         atualizarTotais();
@@ -65,16 +72,16 @@ public class DashboardController {
         try {
             validarCampos();
 
-            String desc = txtDescricao.getText();
-            double valor = Double.parseDouble(txtValor.getText());
-            String tipo = cbTipo.getValue();
+            String desc = txtDescription.getText();
+            double valor = Double.parseDouble(txtAmount.getText());
+            String tipo = cbType.getValue();
             String tag = txtTag.getText();
 
             if (valor <= 0) {
                 throw new TransacaoException("O valor deve ser maior que zero.");
             }
 
-            if ("Entrada".equals(tipo)) {
+            if ("Receita".equals(tipo)) {
                 Receita novaReceita = new Receita(listaReceitas.size() + 1, desc, valor, LocalDate.now(), tag, "Geral", "Aporte");
                 listaReceitas.add(novaReceita);
             } else {
@@ -93,7 +100,9 @@ public class DashboardController {
     }
 
     private void validarCampos() throws TransacaoException {
-        if (txtDescricao.getText().isEmpty() || txtValor.getText().isEmpty() || cbTipo.getValue() == null || txtTag.getText().isEmpty()) {
+        // Valida se o usuário deixou o campo como "Selecione..." ou vazio
+        if (txtDescription.getText().isEmpty() || txtAmount.getText().isEmpty() ||
+                cbType.getValue() == null || "Selecione...".equals(cbType.getValue()) || txtTag.getText().isEmpty()) {
             throw new TransacaoException("Todos os campos precisam estar preenchidos.");
         }
     }
@@ -101,26 +110,49 @@ public class DashboardController {
     private void atualizarTotais() {
         double totalRec = listaReceitas.stream().mapToDouble(Receita::getValor).sum();
         double totalDes = listaDespesas.stream().mapToDouble(Despesa::getValor).sum();
+        double poupanca = totalRec - totalDes;
 
         lblTotalReceita.setText(String.format("R$ %.2f", totalRec));
         lblTotalDespesa.setText(String.format("R$ %.2f", totalDes));
+        lblTotalPoupanca.setText(String.format("R$ %.2f", poupanca));
 
         atualizarGraficoDoughnut(totalRec, totalDes);
     }
 
     private void atualizarGraficoDoughnut(double rec, double des) {
+        double totalGeral = rec + des;
+
+        String labelReceita = "Receitas";
+        String labelDespesa = "Despesas";
+
+        if (totalGeral > 0) {
+            double pctRec = (rec / totalGeral) * 100;
+            double pctDes = (des / totalGeral) * 100;
+
+            labelReceita = String.format("Receitas (%.1f%%)", pctRec);
+            labelDespesa = String.format("Despesas (%.1f%%)", pctDes);
+        } else {
+            labelReceita = "Receitas (0.0%)";
+            labelDespesa = "Despesas (0.0%)";
+        }
+
         ObservableList<PieChart.Data> dados = FXCollections.observableArrayList(
-                new PieChart.Data("Receitas", rec),
-                new PieChart.Data("Despesas", des)
+                new PieChart.Data(labelReceita, rec),
+                new PieChart.Data(labelDespesa, des)
         );
+
         financeChart.setData(dados);
     }
 
     private void limparCampos() {
-        txtDescricao.clear();
-        txtValor.clear();
+        txtDescription.clear();
+        txtAmount.clear();
         txtTag.clear();
-        cbTipo.setValue(null);
+
+        if (cbType != null) {
+            // CORREÇÃO DEFINITIVA: Volta a selecionar o item "Selecione..." pelo índice (0)
+            cbType.getSelectionModel().select(0);
+        }
     }
 
     private void exibirAlerta(String tit, String msg) {
@@ -129,5 +161,18 @@ public class DashboardController {
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
+    }
+
+    @FXML
+    public void handleAlternarTema(ActionEvent event) {
+        if (rootContainer != null) {
+            if (rootContainer.getStyleClass().contains("light-theme")) {
+                rootContainer.getStyleClass().remove("light-theme");
+                rootContainer.getStyleClass().add("dark-theme");
+            } else {
+                rootContainer.getStyleClass().remove("dark-theme");
+                rootContainer.getStyleClass().add("light-theme");
+            }
+        }
     }
 }

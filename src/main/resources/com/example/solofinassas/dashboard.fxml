@@ -1,71 +1,121 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.chart.PieChart?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<ScrollPane fitToWidth="true" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.solofinassas.controller.DashboardController">
-    <VBox spacing="20" style="-fx-padding: 25; -fx-background-color: #ffffff;">
+<VBox fx:id="rootContainer" spacing="20" styleClass="main-container, light-theme" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.solofinassas.controller.DashboardController">
 
-        <Label text="Solo Finanças" style="-fx-font-family: 'Segoe UI'; -fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #37352f;"/>
-
-        <HBox spacing="20">
-            <VBox spacing="10" HBox.hgrow="ALWAYS">
-                <HBox spacing="15">
-                    <VBox styleClass="card" HBox.hgrow="ALWAYS" style="-fx-background-color: #f7f7f5; -fx-padding: 15; -fx-background-radius: 6;">
-                        <Label text="TOTAL RECEITAS" style="-fx-font-size: 11px; -fx-text-fill: #6b6a65; -fx-font-weight: bold;"/>
-                        <Label fx:id="lblTotalReceita" text="R$ 0,00" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2ecc71;"/>
-                    </VBox>
-                    <VBox styleClass="card" HBox.hgrow="ALWAYS" style="-fx-background-color: #f7f7f5; -fx-padding: 15; -fx-background-radius: 6;">
-                        <Label text="TOTAL DESPESAS" style="-fx-font-size: 11px; -fx-text-fill: #6b6a65; -fx-font-weight: bold;"/>
-                        <Label fx:id="lblTotalDespesa" text="R$ 0,00" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #e74c3c;"/>
-                    </VBox>
-                </HBox>
-
-                <VBox spacing="10" style="-fx-background-color: #f7f7f5; -fx-padding: 15; -fx-background-radius: 6;">
-                    <Label text="Nova Movimentação" style="-fx-font-size: 11px; -fx-font-weight: bold;"/>
-                    <HBox spacing="10">
-                        <TextField fx:id="txtDescricao" promptText="Descrição"/>
-                        <TextField fx:id="txtValor" promptText="Valor (R$)"/>
-                        <ComboBox fx:id="cbTipo" promptText="Tipo"/>
-                        <TextField fx:id="txtTag" promptText="Tag/Categoria"/>
-                        <Button text="Adicionar" onAction="#handleAdicionarMovimentacao" style="-fx-background-color: #2383e2; -fx-text-fill: white; -fx-font-weight: bold;"/>
-                    </HBox>
-                </VBox>
-            </VBox>
-
-            <VBox style="-fx-background-color: #f7f7f5; -fx-background-radius: 6; -fx-padding: 5;" alignment="CENTER">
-                <PieChart fx:id="financeChart" prefWidth="250" prefHeight="180" labelsVisible="false"/>
-            </VBox>
-        </HBox>
-
-        <GridPane hgap="20">
-            <columnConstraints>
-                <ColumnConstraints percentWidth="50"/>
-                <ColumnConstraints percentWidth="50"/>
-            </columnConstraints>
-
-            <VBox spacing="10" GridPane.columnIndex="0">
-                <Label text="Histórico de Entradas" style="-fx-font-weight: bold;"/>
-                <TableView fx:id="tabelaReceitas" prefHeight="250">
-                    <columns>
-                        <TableColumn fx:id="colRecDesc" text="Descrição" prefWidth="180"/>
-                        <TableColumn fx:id="colRecValor" text="Valor" prefWidth="100"/>
-                        <TableColumn fx:id="colRecTag" text="Tag" prefWidth="100"/>
-                    </columns>
-                </TableView>
-            </VBox>
-
-            <VBox spacing="10" GridPane.columnIndex="1">
-                <Label text="Histórico de Saídas" style="-fx-font-weight: bold;"/>
-                <TableView fx:id="tabelaDespesas" prefHeight="250">
-                    <columns>
-                        <TableColumn fx:id="colDesDesc" text="Item / Serviço" prefWidth="180"/>
-                        <TableColumn fx:id="colDesValor" text="Valor" prefWidth="100"/>
-                        <TableColumn fx:id="colDesTag" text="Tag" prefWidth="100"/>
-                    </columns>
-                </TableView>
-            </VBox>
-        </GridPane>
+    <VBox alignment="CENTER" styleClass="banner-container" maxWidth="Infinity">
+        <ImageView fx:id="imgBanner" fitHeight="180" fitWidth="900" preserveRatio="false">
+            <image>
+                <Image url="@imagem/Copilot_20260525_100003.png" />
+            </image>
+        </ImageView>
     </VBox>
-</ScrollPane>
+
+    <HBox alignment="CENTER_LEFT" spacing="15" styleClass="header-box" maxWidth="Infinity">
+        <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
+            <image>
+                <Image url="@imagem/Copilot_20260525_095748.png" />
+            </image>
+        </ImageView>
+
+        <VBox HBox.hgrow="ALWAYS">
+            <Label styleClass="header-title" text="Orçamento Mensal" />
+            <Label styleClass="header-subtitle" text="Painel de Controle Financeiro Pessoal" />
+        </VBox>
+
+        <Button fx:id="btnTema" onAction="#handleAlternarTema" styleClass="theme-toggle-btn" text="🌓 Alternar Tema" />
+    </HBox>
+
+    <HBox spacing="15" styleClass="cards-container" maxWidth="Infinity">
+        <VBox styleClass="summary-card, card-receita" HBox.hgrow="ALWAYS">
+            <Label styleClass="card-title" text="Receita Total" />
+            <Label fx:id="lblTotalReceita" styleClass="card-value" text="R$ 0,00" />
+        </VBox>
+        <VBox styleClass="summary-card, card-despesa" HBox.hgrow="ALWAYS">
+            <Label styleClass="card-title" text="Despesa Total" />
+            <Label fx:id="lblTotalDespesa" styleClass="card-value" text="R$ 0,00" />
+        </VBox>
+        <VBox styleClass="summary-card, card-poupanca" HBox.hgrow="ALWAYS">
+            <Label styleClass="card-title" text="Poupança / Saldo" />
+            <Label fx:id="lblTotalPoupanca" styleClass="card-value" text="R$ 0,00" />
+        </VBox>
+    </HBox>
+
+    <HBox spacing="20" VBox.vgrow="ALWAYS" maxWidth="Infinity">
+
+        <VBox spacing="12" styleClass="form-container" HBox.hgrow="NEVER" prefWidth="280" minWidth="280">
+            <Label styleClass="section-title" text="➕ Nova Movimentação" />
+
+            <VBox spacing="4">
+                <Label styleClass="field-label" text="Descrição" />
+                <TextField fx:id="txtDescription" promptText="Ex: Salário Estágio" styleClass="notion-input" />
+            </VBox>
+
+            <VBox spacing="4">
+                <Label styleClass="field-label" text="Valor (R$)" />
+                <TextField fx:id="txtAmount" promptText="0.00" styleClass="notion-input" />
+            </VBox>
+
+            <VBox spacing="4">
+                <Label styleClass="field-label" text="Tipo" />
+                <ComboBox fx:id="cbType" promptText="Selecione..." styleClass="notion-combo" maxWidth="Infinity" />
+            </VBox>
+
+            <VBox spacing="4">
+                <Label styleClass="field-label" text="Tag / Categoria" />
+                <TextField fx:id="txtTag" promptText="Ex: Trabalho, Alimentação" styleClass="notion-input" />
+            </VBox>
+
+            <Button onAction="#handleAdicionarMovimentacao" maxWidth="Infinity" styleClass="notion-button" text="Adicionar ao Registro" />
+        </VBox>
+
+        <VBox spacing="15" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+            <HBox spacing="15" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+
+                <VBox spacing="8" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                    <Label styleClass="table-section-title, title-green" text="Receitas" />
+                    <TableView fx:id="tabelaReceitas" styleClass="notion-table" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colRecDesc" text="Fonte / Item" prefWidth="150" />
+                            <TableColumn fx:id="colRecValor" text="Valor" prefWidth="100" />
+                            <TableColumn fx:id="colRecTag" text="Tag" prefWidth="100" />
+                        </columns>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        </columnResizePolicy>
+                    </TableView>
+                </VBox>
+
+                <VBox spacing="8" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                    <Label styleClass="table-section-title, title-red" text="Despesas" />
+                    <TableView fx:id="tabelaDespesas" styleClass="notion-table" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colDesDesc" text="Item / Serviço" prefWidth="150" />
+                            <TableColumn fx:id="colDesValor" text="Valor" prefWidth="100" />
+                            <TableColumn fx:id="colDesTag" text="Tag" prefWidth="100" />
+                        </columns>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        </columnResizePolicy>
+                    </TableView>
+                </VBox>
+
+            </HBox>
+
+            <VBox alignment="CENTER" styleClass="chart-container" prefHeight="180" minHeight="150" HBox.hgrow="ALWAYS">
+                <PieChart fx:id="financeChart" labelsVisible="true" maxWidth="Infinity" maxHeight="Infinity" />
+            </VBox>
+        </VBox>
+    </HBox>
+</VBox>
