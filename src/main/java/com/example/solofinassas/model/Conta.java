@@ -13,7 +13,6 @@ public class Conta {
         this.banco = banco;
     }
 
-    // Getters e Setters para cumprir o Encapsulamento
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -26,7 +25,6 @@ public class Conta {
     public String getBanco() { return banco; }
     public void setBanco(String banco) { this.banco = banco; }
 
-    // Regras de negócio pedidas no teu diagrama do draw.io
     public void depositar(double valor) {
         if (valor > 0) {
             this.saldo += valor;

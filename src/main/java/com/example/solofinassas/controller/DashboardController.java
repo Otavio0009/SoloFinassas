@@ -46,7 +46,6 @@ public class DashboardController {
         }
 
         if (cbType != null) {
-            // Coloca "Selecione..." como a opção padrão da lista para garantir que ela apareça sempre
             cbType.setItems(FXCollections.observableArrayList("Selecione...", "Receita", "Despesa"));
             cbType.getSelectionModel().select(0);
         }
@@ -100,7 +99,6 @@ public class DashboardController {
     }
 
     private void validarCampos() throws TransacaoException {
-        // Valida se o usuário deixou o campo como "Selecione..." ou vazio
         if (txtDescription.getText().isEmpty() || txtAmount.getText().isEmpty() ||
                 cbType.getValue() == null || "Selecione...".equals(cbType.getValue()) || txtTag.getText().isEmpty()) {
             throw new TransacaoException("Todos os campos precisam estar preenchidos.");
@@ -150,7 +148,6 @@ public class DashboardController {
         txtTag.clear();
 
         if (cbType != null) {
-            // CORREÇÃO DEFINITIVA: Volta a selecionar o item "Selecione..." pelo índice (0)
             cbType.getSelectionModel().select(0);
         }
     }
