@@ -125,8 +125,8 @@
     -fx-background-color: #ffffff;
     -fx-text-fill: #37352f;
 }
-.light-theme .notion-table .table-row-cell:filled {
-    -fx-background-color: #ffffff;
+.dark-theme .notion-table .table-row-cell {
+    -fx-background-color: #202020;
 }
 .light-theme .notion-table .table-cell {
     -fx-text-fill: #37352f;
@@ -204,7 +204,7 @@
     -fx-background-color: #202020;
     -fx-text-fill: #ffffff;
 }
-.dark-theme .notion-table .table-row-cell:filled {
+.dark-theme .notion-table .table-row-cell {
     -fx-background-color: #202020;
 }
 .dark-theme .notion-table .table-cell {
